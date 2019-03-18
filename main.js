@@ -47,6 +47,7 @@ function addTodo(event) {
     const newList = document.createElement('li');
 
     newList.innerText = newTodo;
+    newList.id = 'todo-not-completed';
     
     // Add an event listener on the newly created html element to launch
     // `toggleDone` when it's clicked.
@@ -86,6 +87,13 @@ function clearDoneTodos(event) {
         One way to do this is to build up a new array. Give that a try first!
 
     */
+    for (let i = 0; i < todos.length; i++){
+        if (isDone.includes(todos[i])){
+            todos.splice(i, 1);
+        }
+    }
+    
+    document.querySelector('#todo-list').removeChild('#todo-completed');
 
 
 
@@ -112,11 +120,21 @@ function toggleDone(event) {
     
     // Grab the HTML element that was clicked.
     // If you don't know, the event parameter has what you need... somewhere.
-    
+    const clickedElement = event.target;
+    const clickedText= clickedElement.innerText;
+
+    if (clickedElement.style.textDecoration === 'line-through'){
+        clickedElement.style.textDecoration = '';
+        clickedElement.id = 'todo-not-completed';
+        isDone.splice(isDone.indexOf(clickedText),1);
+    } else {
+        clickedElement.style.textDecoration = 'line-through';
+        isDone.push(clickedText);
+        clickedElement.id = 'todo-completed';
+    }
 
     // Find the index of the array that this todo resides in. There are a couple
     // ways to do this, and I'm sure you'll figure one out!
-
 
     // *IF* it's not done yet, apply strikethrough. Otherwise, take that
     // strikethrough away!
@@ -140,4 +158,14 @@ function removeAllChildrenOfOl() {
         listToRemove.removeChild(listToRemove.firstChild);
     }
 
+}
+
+function createNewList(newList) {
+    // Delete all current list
+    removeAllChildrenOfOl();
+
+    // For each item in the new list, create a new list element
+    for (let i = 0; i < newList.length; i++) {
+
+    }
 }
