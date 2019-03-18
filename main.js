@@ -37,7 +37,7 @@ function addTodo(event) {
     const newTodo = document.querySelector('#new-todo').value;
 
     // Clear the input field of all text.
-
+    document.querySelector('#new-todo').value = '';
 
     // Put the todo and its "done-ness" in their respective arrays.
     todos.push(newTodo);
@@ -61,10 +61,11 @@ function addTodo(event) {
 
 function clearAllTodos(event) {
     // Stop page from reloading on button click.
-
+    event.preventDefault();
     
     // Remove all todos from BOTH arrays.
-
+    todos = [];
+    isDone = [];
     
     // Remove all todos from the html.
     // You'll have to write that function too, but we'll call it here:
@@ -73,6 +74,7 @@ function clearAllTodos(event) {
 
 function clearDoneTodos(event) {
     // Stop page from reloading on button click.
+    event.preventDefault();
 
     /*
         Find which todos need to be removed and remove them from BOTH arrays.
@@ -84,6 +86,7 @@ function clearDoneTodos(event) {
         One way to do this is to build up a new array. Give that a try first!
 
     */
+
 
 
 
@@ -109,7 +112,7 @@ function toggleDone(event) {
     
     // Grab the HTML element that was clicked.
     // If you don't know, the event parameter has what you need... somewhere.
-
+    
 
     // Find the index of the array that this todo resides in. There are a couple
     // ways to do this, and I'm sure you'll figure one out!
@@ -120,11 +123,12 @@ function toggleDone(event) {
 
 
     // Toggle the "done-ness" of the same todo, using the isDone array.
-
 }
 
 function removeAllChildrenOfOl() {
     // Grab the ol.
+    const listToRemove = document.querySelector('#todo-list');
+
 
 
     // Remove all its children.
@@ -132,5 +136,8 @@ function removeAllChildrenOfOl() {
     // there are some to remove.
     // Look at the methods `.hasChildNodes` and `removeChild`.
     // There are other ways too, though. Feel free to poke around.
+    while (listToRemove.hasChildNodes()){
+        listToRemove.removeChild(listToRemove.firstChild);
+    }
 
 }
