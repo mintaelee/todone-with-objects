@@ -30,25 +30,31 @@ function init() {
 
 function addTodo(event) {
     // Stop page from reloading on button click.
+    event.preventDefault();
 
 
     // Get new todo from the new todo input field.
-
+    const newTodo = document.querySelector('#new-todo').value;
 
     // Clear the input field of all text.
 
 
     // Put the todo and its "done-ness" in their respective arrays.
-
+    todos.push(newTodo);
 
     // Create a new html element and put our new todo's text in there.
+    const todoList = document.querySelector('#todo-list');
+    const newList = document.createElement('li');
 
+    newList.innerText = newTodo;
     
     // Add an event listener on the newly created html element to launch
     // `toggleDone` when it's clicked.
-
+    newList.addEventListener('click', toggleDone);
 
     // Put our new element on the list part of our page!
+    todoList.appendChild(newList);
+
 
 }
 
