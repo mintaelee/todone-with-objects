@@ -41,22 +41,10 @@ function addTodo(event) {
 
     // Put the todo and its "done-ness" in their respective arrays.
     todos.push(newTodo);
+    isDone.push(false);
 
-    // Create a new html element and put our new todo's text in there.
-    const todoList = document.querySelector('#todo-list');
-    const newList = document.createElement('li');
-
-    newList.innerText = newTodo;
-    newList.className = 'todo-not-completed';
-    
-    // Add an event listener on the newly created html element to launch
-    // `toggleDone` when it's clicked.
-    newList.addEventListener('click', toggleDone);
-
-    // Put our new element on the list part of our page!
-    todoList.appendChild(newList);
-
-
+    // Update HTML
+    updateHTML(todos);
 }
 
 
@@ -78,11 +66,24 @@ function clearDoneTodos(event) {
     event.preventDefault();
 
     // Select all completed elements
-    const classToClear = document.querySelectorAll('.todo-completed');
+    // const classToClear = document.querySelectorAll('.todo-completed');
 
     // Remove selected elements
-    classToClear.forEach(CompletedNode => CompletedNode.parentNode.removeChild(CompletedNode));
+    // classToClear.forEach(CompletedNode => CompletedNode.parentNode.removeChild(CompletedNode));
 
+
+    // Loop through isDone array until there is no completed element
+    while (isDone.includes(true)){
+        // Find index of completed element
+        let deleteIndex = isDone.indexOf(true);
+
+        // Remove the element from both arrays
+        isDone.splice(deleteIndex, 1);
+        todos.splice(deleteIndex, 1);
+    }
+
+    // Update HTML
+    updateHTML(todos);
 
 
 
@@ -96,8 +97,9 @@ function toggleDone(event) {
     // If you don't know, the event parameter has what you need... somewhere.
     const clickedElement = event.target;
 
-    // Grab the text of the element that was clicked
+    // Grab the text and index of the element that was clicked
     const clickedText= clickedElement.innerText;
+    const clickedIndex = todos.indexOf(clickedText);
 
     // Check if the clicked element is completed by looking at its text decoration property
     // If the element is not done yet, apply strikethrough, add to isDone array,
@@ -108,13 +110,21 @@ function toggleDone(event) {
     if (clickedElement.style.textDecoration === 'line-through'){
         clickedElement.style.textDecoration = '';
         clickedElement.className = 'todo-not-completed';
-        isDone.splice(isDone.indexOf(clickedText),1);
+        isDone[clickedIndex] = false;
     } else {
         clickedElement.style.textDecoration = 'line-through';
-        isDone.push(clickedText);
         clickedElement.className = 'todo-completed';
+        isDone[clickedIndex] = true;
     }
 
+}
+
+function mouseoverDone(event){
+    event.target.style.fontSize = '1.5em';
+}
+
+function mouseoutDone(event){
+    event.target.style.fontSize = '1em';
 }
 
 function removeAllChildrenOfOl() {
@@ -134,12 +144,26 @@ function removeAllChildrenOfOl() {
 
 }
 
-function createNewList(newList) {
-    // Delete all current list
+
+function updateHTML(items) {
+    // Clear HTML
     removeAllChildrenOfOl();
 
-    // For each item in the new list, create a new list element
-    for (let i = 0; i < newList.length; i++) {
+    // Update HTML List based on the current arrays
+    const todoList = document.querySelector('#todo-list');
 
+    for (let i = 0; i < items.length; i++){
+        const newList = document.createElement('li');
+        newList.innerText = items[i];
+        newList.className = 'todo-not-completed';
+
+        // Add an event listener on the newly created html element to launch
+        // `toggleDone` when it's clicked.
+        newList.addEventListener('click', toggleDone);
+        newList.addEventListener('mouseover', mouseoverDone);
+        newList.addEventListener('mouseout', mouseoutDone);
+
+        // Put our new element on the list part of our page!
+        todoList.appendChild(newList);
     }
 }
