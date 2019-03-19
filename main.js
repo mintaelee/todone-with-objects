@@ -47,7 +47,7 @@ function addTodo(event) {
     const newList = document.createElement('li');
 
     newList.innerText = newTodo;
-    newList.id = 'todo-not-completed';
+    newList.className = 'todo-not-completed';
     
     // Add an event listener on the newly created html element to launch
     // `toggleDone` when it's clicked.
@@ -77,39 +77,13 @@ function clearDoneTodos(event) {
     // Stop page from reloading on button click.
     event.preventDefault();
 
-    /*
-        Find which todos need to be removed and remove them from BOTH arrays.
-        If you did it right when making them, you should be able to check the
-        `isDone` array to figure out which ones are, in fact, done. Remember
-        that there is a 1:1 relationship between `todos` indices and `isDone`
-        indices!
+    // Select all completed elements
+    const classToClear = document.querySelectorAll('.todo-completed');
 
-        One way to do this is to build up a new array. Give that a try first!
-
-    */
-    for (let i = 0; i < todos.length; i++){
-        if (isDone.includes(todos[i])){
-            todos.splice(i, 1);
-        }
-    }
-    
-    document.querySelector('#todo-list').removeChild('#todo-completed');
+    // Remove selected elements
+    classToClear.forEach(CompletedNode => CompletedNode.parentNode.removeChild(CompletedNode));
 
 
-
-
-    /*
-        Now remove the done todos from the html.
-
-        Although it's not technically efficient as there is a slight time cost
-        to rendering new elements on a web page, you might think not of removing
-        certain todos but making a new set of lis to replace what we have. You
-        may even already have some code to clear the whole list!
-
-        You could do it the harder but more html efficient way instead, though.
-
-        Your call.
-    */
 
 
 }
@@ -121,26 +95,26 @@ function toggleDone(event) {
     // Grab the HTML element that was clicked.
     // If you don't know, the event parameter has what you need... somewhere.
     const clickedElement = event.target;
+
+    // Grab the text of the element that was clicked
     const clickedText= clickedElement.innerText;
 
+    // Check if the clicked element is completed by looking at its text decoration property
+    // If the element is not done yet, apply strikethrough, add to isDone array,
+    // and assign class name as 'todo-completed'
+    // Otherwise, take strikethrough away, remove from isDone array, and assign 
+    // class name as 'todo-not-completed'
+    
     if (clickedElement.style.textDecoration === 'line-through'){
         clickedElement.style.textDecoration = '';
-        clickedElement.id = 'todo-not-completed';
+        clickedElement.className = 'todo-not-completed';
         isDone.splice(isDone.indexOf(clickedText),1);
     } else {
         clickedElement.style.textDecoration = 'line-through';
         isDone.push(clickedText);
-        clickedElement.id = 'todo-completed';
+        clickedElement.className = 'todo-completed';
     }
 
-    // Find the index of the array that this todo resides in. There are a couple
-    // ways to do this, and I'm sure you'll figure one out!
-
-    // *IF* it's not done yet, apply strikethrough. Otherwise, take that
-    // strikethrough away!
-
-
-    // Toggle the "done-ness" of the same todo, using the isDone array.
 }
 
 function removeAllChildrenOfOl() {
