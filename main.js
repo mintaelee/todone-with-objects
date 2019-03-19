@@ -40,7 +40,7 @@ function addTodo(event) {
     document.querySelector('#new-todo').value = '';
 
     // Put the todo and its "done-ness" in their respective arrays.
-    todos.push(newTodo);
+    todos.push( newTodo);
     isDone.push(false);
 
     // Update HTML
@@ -96,10 +96,12 @@ function toggleDone(event) {
     // Grab the HTML element that was clicked.
     // If you don't know, the event parameter has what you need... somewhere.
     const clickedElement = event.target;
+    console.log(event);
 
     // Grab the text and index of the element that was clicked
-    const clickedText= clickedElement.innerText;
-    const clickedIndex = todos.indexOf(clickedText);
+    const clickedText = clickedElement.innerText;
+    const clickedIndex = parseInt(clickedElement.id);
+    console.log(clickedIndex);
 
     // Check if the clicked element is completed by looking at its text decoration property
     // If the element is not done yet, apply strikethrough, add to isDone array,
@@ -156,10 +158,13 @@ function updateHTML(items) {
         const newList = document.createElement('li');
         newList.innerText = items[i];
         newList.className = 'todo-not-completed';
+        newList.id = i;
 
         // Add an event listener on the newly created html element to launch
         // `toggleDone` when it's clicked.
         newList.addEventListener('click', toggleDone);
+
+        // Add event listeners for mouseover and mouseout
         newList.addEventListener('mouseover', mouseoverDone);
         newList.addEventListener('mouseout', mouseoutDone);
 
