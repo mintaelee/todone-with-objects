@@ -10,6 +10,9 @@ For example, isDone[3] would hold the "done-ness" information for todos[3].
 let todos = [];
 let isDone = [];
 
+// Global indexCounter to check the index of the next element to add.
+let indexCounter = 0;
+
 // When the html finishes loading, launch `init`.
 window.onload = init;
 
@@ -44,7 +47,7 @@ function addTodo(event) {
     isDone.push(false);
 
     // Update HTML
-    updateHTML(todos);
+    appendHTML(newTodo);
 }
 
 
@@ -96,18 +99,15 @@ function toggleDone(event) {
     // Grab the HTML element that was clicked.
     // If you don't know, the event parameter has what you need... somewhere.
     const clickedElement = event.target;
-    console.log(event);
 
-    // Grab the text and index of the element that was clicked
-    const clickedText = clickedElement.innerText;
+    // Grab the id of the element that was clicked and set it to the index to refer to
     const clickedIndex = parseInt(clickedElement.id);
-    console.log(clickedIndex);
 
     // Check if the clicked element is completed by looking at its text decoration property
-    // If the element is not done yet, apply strikethrough, add to isDone array,
-    // and assign class name as 'todo-completed'
-    // Otherwise, take strikethrough away, remove from isDone array, and assign 
-    // class name as 'todo-not-completed'
+    // If the element is not done yet, apply strikethrough, make corresponding isDone
+    // element to 'true', and assign class name as 'todo-completed'
+    // Otherwise, take strikethrough away, make corresponding isDone element to 'false', 
+    // and assign class name as 'todo-not-completed'
     
     if (clickedElement.style.textDecoration === 'line-through'){
         clickedElement.style.textDecoration = '';
@@ -120,11 +120,12 @@ function toggleDone(event) {
     }
 
 }
-
+// Function to create a mouseover effect
 function mouseoverDone(event){
     event.target.style.fontSize = '1.5em';
 }
 
+// Function to create a mouseout effect
 function mouseoutDone(event){
     event.target.style.fontSize = '1em';
 }
@@ -132,7 +133,6 @@ function mouseoutDone(event){
 function removeAllChildrenOfOl() {
     // Grab the ol.
     const listToRemove = document.querySelector('#todo-list');
-
 
 
     // Remove all its children.
@@ -144,8 +144,37 @@ function removeAllChildrenOfOl() {
         listToRemove.removeChild(listToRemove.firstChild);
     }
 
+    // Reset indexCounter.
+    indexCounter = 0;
+
 }
 
+function appendHTML(item) {
+    // Grab the todo list.
+    const todoList = document.querySelector('#todo-list');
+
+    // Create a new list element
+    const newList = document.createElement('li');
+    newList.innerText = item;
+
+    // Set class name as default and id as current index
+    newList.className = 'todo-not-completed';
+    newList.id = indexCounter;
+
+    // Increase current index by one.
+    indexCounter ++;
+
+    // Add an event listener on the newly created html element to launch
+    // `toggleDone` when it's clicked.
+    newList.addEventListener('click', toggleDone);
+
+    // Add event listeners for mouseover and mouseout
+    newList.addEventListener('mouseover', mouseoverDone);
+    newList.addEventListener('mouseout', mouseoutDone);
+
+    // Put our new element on the list part of our page!
+    todoList.appendChild(newList);
+}
 
 function updateHTML(items) {
     // Clear HTML
@@ -154,21 +183,8 @@ function updateHTML(items) {
     // Update HTML List based on the current arrays
     const todoList = document.querySelector('#todo-list');
 
+    // Loop through items in the todo list and update HTML.
     for (let i = 0; i < items.length; i++){
-        const newList = document.createElement('li');
-        newList.innerText = items[i];
-        newList.className = 'todo-not-completed';
-        newList.id = i;
-
-        // Add an event listener on the newly created html element to launch
-        // `toggleDone` when it's clicked.
-        newList.addEventListener('click', toggleDone);
-
-        // Add event listeners for mouseover and mouseout
-        newList.addEventListener('mouseover', mouseoverDone);
-        newList.addEventListener('mouseout', mouseoutDone);
-
-        // Put our new element on the list part of our page!
-        todoList.appendChild(newList);
+        appendHTML(items[i]);
     }
 }
