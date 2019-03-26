@@ -45,7 +45,7 @@ function addTodo(event) {
     todos.push({'index': indexCounter, 'todo': newTodo, 'status': false});
 
     // Update HTML
-    appendHTML(newTodo);
+    appendHTML(todos[indexCounter]);
 }
 
 
@@ -151,11 +151,11 @@ function appendHTML(item) {
 
     // Create a new list element
     const newList = document.createElement('li');
-    newList.innerText = item;
+    newList.innerText = item.todo;
 
     // Set class name as default and id as current index
     newList.className = 'todo-not-completed';
-    newList.id = indexCounter;
+    newList.id = item.index;
 
     // Increase current index by one.
     indexCounter ++;
@@ -181,7 +181,7 @@ function updateHTML(items) {
 
     // Loop through items in the todo list and update HTML.
     for (let i = 0; i < items.length; i++){
-        appendHTML(items[i].todo);
         items[i].index = i;
+        appendHTML(items[i]);
     }
 }
