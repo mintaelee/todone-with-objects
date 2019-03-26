@@ -8,7 +8,6 @@ For example, isDone[3] would hold the "done-ness" information for todos[3].
 */
 
 let todos = [];
-let isDone = [];
 
 // Global indexCounter to check the index of the next element to add.
 let indexCounter = 0;
@@ -43,8 +42,7 @@ function addTodo(event) {
     document.querySelector('#new-todo').value = '';
 
     // Put the todo and its "done-ness" in their respective arrays.
-    todos.push( newTodo);
-    isDone.push(false);
+    todos.push({'index': indexCounter, 'todo': newTodo, 'status': false});
 
     // Update HTML
     appendHTML(newTodo);
@@ -57,7 +55,6 @@ function clearAllTodos(event) {
     
     // Remove all todos from BOTH arrays.
     todos = [];
-    isDone = [];
     
     // Remove all todos from the html.
     // You'll have to write that function too, but we'll call it here:
@@ -76,12 +73,11 @@ function clearDoneTodos(event) {
 
 
     // Loop through isDone array until there is no completed element
-    while (isDone.includes(true)){
+    while (todos.filter(todo => todo.status === true).length > 0){
         // Find index of completed element
-        let deleteIndex = isDone.indexOf(true);
+        let deleteIndex = todos.findIndex(i => i.status === true);
 
         // Remove the element from both arrays
-        isDone.splice(deleteIndex, 1);
         todos.splice(deleteIndex, 1);
     }
 
@@ -112,11 +108,11 @@ function toggleDone(event) {
     if (clickedElement.style.textDecoration === 'line-through'){
         clickedElement.style.textDecoration = '';
         clickedElement.className = 'todo-not-completed';
-        isDone[clickedIndex] = false;
+        todos[clickedIndex].status = false;
     } else {
         clickedElement.style.textDecoration = 'line-through';
         clickedElement.className = 'todo-completed';
-        isDone[clickedIndex] = true;
+        todos[clickedIndex].status = true;
     }
 
 }
@@ -185,6 +181,7 @@ function updateHTML(items) {
 
     // Loop through items in the todo list and update HTML.
     for (let i = 0; i < items.length; i++){
-        appendHTML(items[i]);
+        appendHTML(items[i].todo);
+        items[i].index = i;
     }
 }
